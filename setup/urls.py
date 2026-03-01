@@ -15,10 +15,18 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
-from myflix.views import users
+from django.urls import include, path
+from rest_framework import routers
+from myflix.views import listaStream, userViewSet, streamViewSet, listaViewSet, listaUser, listaStream
+
+router = routers.DefaultRouter()
+router.register('users', userViewSet, basename='users')
+router.register('streams', streamViewSet, basename='streams')
+router.register('listas', listaViewSet, basename='listas')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('users/', users)
+    path('', include(router.urls)),
+    path('users/<int:pk>/listas/', listaUser.as_view(), name='user-listas'),
+    path('streams/<int:pk>/listas/', listaStream.as_view(), name='stream'),
 ]
